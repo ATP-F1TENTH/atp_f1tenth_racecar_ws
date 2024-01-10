@@ -1,6 +1,6 @@
 [submodule "src/rplidar_ros"]
 	path = src/rplidar_ros
-	url = https://github.com/wette/rplidar_ros.git
+	url = https://github.com/Autonomous-Racing-Labs/rplidar_ros.git
 	branch = ros2
 [submodule "src/transport_drivers"]
 	path = src/transport_drivers
