@@ -10,3 +10,8 @@
 	path = src/vesc
 	url = https://github.com/f1tenth/vesc.git
 	branch = ros2
+[submodule "src/laser_hello_world"]
+	path = src/laser_hello_world
+	url = https://github.com/Autonomous-Racing-Labs/laser_hello_world.git
+	branch = master
+
