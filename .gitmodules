@@ -18,3 +18,6 @@
 	path=src/vehicle_control
 	url = https://github.com/Autonomous-Racing-Labs/vehicle_control.git
 	branch = master
+[submodule "src/f1tenth_gym_ros"]
+	path = src/f1tenth_gym_ros
+	url = https://github.com/Autonomous-Racing-Labs/f1tenth_gym_ros.git
