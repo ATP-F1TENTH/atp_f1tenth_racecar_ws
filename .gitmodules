@@ -14,4 +14,7 @@
 	path = src/laser_hello_world
 	url = https://github.com/Autonomous-Racing-Labs/laser_hello_world.git
 	branch = master
-
+[submodule "src/vehicle_control"]
+	path=src/vehicle_control
+	url = https://github.com/Autonomous-Racing-Labs/vehicle_control.git
+	branch = master
