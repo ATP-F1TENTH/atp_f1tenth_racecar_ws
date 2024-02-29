@@ -8,7 +8,7 @@
 	branch = main
 [submodule "src/vesc"]
 	path = src/vesc
-	url = https://github.com/f1tenth/vesc.git
+	url = https://github.com/Autonomous-Racing-Labs/vesc.git
 	branch = ros2
 [submodule "src/laser_hello_world"]
 	path = src/laser_hello_world
