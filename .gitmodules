@@ -21,3 +21,6 @@
 [submodule "src/f1tenth_gym_ros"]
 	path = src/f1tenth_gym_ros
 	url = https://github.com/Autonomous-Racing-Labs/f1tenth_gym_ros.git
+[submodule "src/f1tenth_raceline"]
+	path = src/f1tenth_raceline
+	url = https://github.com/wette/f1tenth_raceline.git
