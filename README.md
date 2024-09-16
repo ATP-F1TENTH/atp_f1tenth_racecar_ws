@@ -28,19 +28,15 @@ ros2 launch vehicle_control vehicle_control_launch.py
 # Mapping and Localization
 
 ## Extra steps to be done in simulation
-When using the simulator, a map and a vehicle position is alredy beeing published by the simulator.
+When using the simulator, a map is alredy beeing published by the simulator.
 As this information clashes with any mapping/localization pipeline, we first need to disable this feature of the simulation.
 
-To this end, open file `sim.yaml` from the `f1tenth_gym_ros/config` and set
-```
-publish_odom_transform: false 
-```
-
-Then, open `vehicle_control_simulation_launch.py` from `vehicle_control/launch` and comment out the follwing two lines to stop the simulation's map server from beeing started:
+To this end, open `vehicle_control_simulation_launch.py` from `vehicle_control/launch` and comment out the follwing two lines to stop the simulation's map server from beeing started:
 ```
 #ld.add_action(nav_lifecycle_node)
 #ld.add_action(map_server_node)
 ```
+
 
 After that, use `colcon build` to build your changes. You may now proceed to Creating a Map using slam_toolbox.
 
@@ -58,7 +54,10 @@ Open rviz and add the SlamToobox Panel (Panels --> Add new panels). You can find
 ros2 launch mapping_localization/localization_launch_amcl.py params_file:=mapping_localization/nav2_params.yaml map:=MindenCitySpeedway0408.yaml
 ```
 
+
 If the map does not show up in rviz2, set Map->Topic->"Durability Policy" to "Transient Local" in the left rviz control pane.
+
+The TF Tree ALWAYS needs to be: map --> odom --> base_link --> laserframe; both for mapping and localization (wheras map --> odom is publiced by the particle filter in localization mode)
 
 ## Helpful resources
 - https://guni91.wordpress.com/2020/12/05/cartographer-ros2-installation/
