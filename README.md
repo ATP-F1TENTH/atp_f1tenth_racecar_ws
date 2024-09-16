@@ -11,3 +11,55 @@ Build with colcon:
 ```
 colcon build
 ```
+
+
+## Start Simulator
+```
+source install/setup.bash
+ros2 launch vehicle_control vehicle_control_simulation_launch.py
+```
+
+## Start on actual vehicle
+```
+source install/setup.bash
+ros2 launch vehicle_control vehicle_control_launch.py
+```
+
+# Mapping and Localization
+
+## Extra steps to be done in simulation
+When using the simulator, a map and a vehicle position is alredy beeing published by the simulator.
+As this information clashes with any mapping/localization pipeline, we first need to disable this feature of the simulation.
+
+To this end, open file `sim.yaml` from the `f1tenth_gym_ros/config` and set
+```
+publish_odom_transform: false 
+```
+
+Then, open `vehicle_control_simulation_launch.py` from `vehicle_control/launch` and comment out the follwing two lines to stop the simulation's map server from beeing started:
+```
+#ld.add_action(nav_lifecycle_node)
+#ld.add_action(map_server_node)
+```
+
+After that, use `colcon build` to build your changes. You may now proceed to Creating a Map using slam_toolbox.
+
+
+## Create a Map using slam_toolbox
+Start Slam Toolbox with command
+```
+ros2 launch slam_toolbox online_async_launch.py slam_params_file:=/root/wette_racecar_ws/mapping_localization/mapper_params_online_async.yaml
+```
+Open rviz and add the SlamToobox Panel (Panels --> Add new panels). You can find a "save to file" button there.
+
+
+### Localize in that map using AMCL Montecarlo Localization
+```
+ros2 launch mapping_localization/localization_launch_amcl.py params_file:=mapping_localization/nav2_params.yaml map:=MindenCitySpeedway0408.yaml
+```
+
+If the map does not show up in rviz2, set Map->Topic->"Durability Policy" to "Transient Local" in the left rviz control pane.
+
+## Helpful resources
+- https://guni91.wordpress.com/2020/12/05/cartographer-ros2-installation/
+- https://google-cartographer-ros.readthedocs.io/en/latest/algo_walkthrough.html
