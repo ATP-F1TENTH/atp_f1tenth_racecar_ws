@@ -24,3 +24,9 @@
 [submodule "src/f1tenth_raceline"]
 	path = src/f1tenth_raceline
 	url = https://github.com/wette/f1tenth_raceline.git
+[submodule "aesthetic_control"]
+	path = aesthetic_control
+	url = https://github.com/Autonomous-Racing-Labs/aesthetic_control.git
+[submodule "src/aesthetic_control"]
+	path = src/aesthetic_control
+	url = https://github.com/Autonomous-Racing-Labs/aesthetic_control.git
