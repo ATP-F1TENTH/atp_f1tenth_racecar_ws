@@ -27,3 +27,6 @@
 [submodule "src/aesthetic_control"]
 	path = src/aesthetic_control
 	url = https://github.com/Autonomous-Racing-Labs/aesthetic_control.git
+[submodule "src/telemetry_monitor"]
+	path = src/telemetry_monitor
+	url = https://github.com/Autonomous-Racing-Labs/telemetry_monitor.git
