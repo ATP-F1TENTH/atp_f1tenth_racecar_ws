@@ -30,3 +30,6 @@
 [submodule "src/telemetry_monitor"]
 	path = src/telemetry_monitor
 	url = https://github.com/Autonomous-Racing-Labs/telemetry_monitor.git
+[submodule "src/telemetry_monitor_interfaces"]
+	path = src/telemetry_monitor_interfaces
+	url = https://github.com/Autonomous-Racing-Labs/telemetry_monitor_interfaces.git
