@@ -1,0 +1,1 @@
+echo "export ROS_DOMAIN_ID=1" >> ~/.bashrc
