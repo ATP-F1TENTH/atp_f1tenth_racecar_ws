@@ -35,5 +35,4 @@
 	url = https://github.com/Autonomous-Racing-Labs/telemetry_monitor_interfaces.git
 [submodule "src/camera_ros"]
 	path = src/camera_ros
-	url = https://github.com/Autonomous-Racing-Labs/camera_ros.git
-	branch = main
+	url = https://github.com/PAW-F1TENTH/camera_ros.git
