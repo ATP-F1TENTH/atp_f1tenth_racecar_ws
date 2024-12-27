@@ -53,6 +53,7 @@ def discretized_linearized_model(Xbar_k, Ubar_k, model_params, Ts):
     l_r = model_params["lr"]
 
     # Extract states and inputs
+    #Xbar_k are current values - think of "working point", e.g. like in taylor series
     phi = Xbar_k[model_params["stateindex_phi"]]
     v_x = Xbar_k[model_params["stateindex_vx"]]
     v_y = Xbar_k[model_params["stateindex_vy"]]
