@@ -5,6 +5,8 @@ from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
 from ackermann_msgs.msg import AckermannDriveStamped
 import math
+# Show case for import user defined class
+from TestKlasse import TestClass as TC
 
 TOPIC_DRIVE = "/drive"
 TOPIC_LASERSCAN = "/scan"
