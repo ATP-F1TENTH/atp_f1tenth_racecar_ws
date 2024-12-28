@@ -1,16 +1,13 @@
-class Car_Constants():
-    def __init__(self):
-        pass
 
 
-#this Class defines all constant model parameters;
-#the data is stored in a python dictionary
-#once the function is called, it returns all model parameters
-
-
-
-def get_model_params():
-        model_params = {
+class CarConstants(object):
+    """
+    Entity class defining all constant model parameter in a dictionary
+    """
+    
+    def __new__(self):
+        
+        self.__model_params = {
 
             "sx": 7,  # number of states
             "su": 3,  # number of inputs
@@ -55,4 +52,5 @@ def get_model_params():
             "L": 0.6,           #source Ilja
             "W": 0.274,         #source Ilja
         }
-        return model_params
+
+        return self.__model_params

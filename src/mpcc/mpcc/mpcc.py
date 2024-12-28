@@ -1,22 +1,30 @@
+
+# ROS2 imports
 import rclpy
 from rclpy.node import Node
-
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
 from ackermann_msgs.msg import AckermannDriveStamped
+
+# import python packages
 import math
-from Car_Constants import Car_Constants as CarCons
-from MPC_Mat_Cons import MPC_Mat_Cons as MatCons
-from linearizedModel import linearizedModel as LM
 
-# Show case for import user defined class
-from TestKlasse import TestClass as TC
+# import own classes
+from carConstants import CarConstants
+from mpcMatCons import MpcMatCons as MatCons
+from linearizedModel import LinearizedModel
 
+
+# Set ROS2 topic names
 TOPIC_DRIVE = "/drive"
 TOPIC_LASERSCAN = "/scan"
 TOPIC_ODOMETRY = "/ego_racecar/odom"
 
 class MPCC(Node):
+    """
+    Entry node of the mpcc package
+    """
+    
     def __init__(self):
         super().__init__('mpcc')
         self.sub_laser = self.create_subscription(LaserScan, TOPIC_LASERSCAN, self.callback_new_laserscan, 10)
