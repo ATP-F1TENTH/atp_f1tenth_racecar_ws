@@ -14,12 +14,8 @@ from carConstants import CarConstants
 from mpcMatCons import MpcMatCons as MatCons
 from linearizedModel import LinearizedModel
 from next_step import next_step
-<<<<<<< HEAD
-from SimTimeStep import sim_time_step
 from updating_phi import updating_phi
-=======
 from SimTimeStep import SimTimeStep
->>>>>>> b21c8df9a79877d2d7dd2cf519fcb45b415fc9ee
 
 # Set ROS2 topic names
 TOPIC_DRIVE = "/drive"
