@@ -15,6 +15,7 @@ from mpcMatCons import MpcMatCons as MatCons
 from linearizedModel import LinearizedModel
 from next_step import next_step
 from SimTimeStep import sim_time_step
+from updating_phi import updating_phi
 
 # Set ROS2 topic names
 TOPIC_DRIVE = "/drive"
