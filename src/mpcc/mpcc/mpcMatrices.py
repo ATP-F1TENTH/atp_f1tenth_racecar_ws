@@ -1,5 +1,6 @@
 
 import numpy as np
+from mpcSolverInterface import mpcSolver as Solver
 
 class mpcMatrices(None):
     """
@@ -50,7 +51,8 @@ class mpcMatrices(None):
             Ck, ug, lg = self.get_inequality_constraints(borders[max(i-1, 0)], MPC_vars, ModelParams)
             
             # Bounds
-            lb, ub = self.get_bounds(MPC_vars, ModelParams)
+            lb = MPC_vars['bounds'][:, 0]
+            ub = MPC_vars['bounds'][:, 1]
             
             # Append to stage
             stage.append({'Qk': Qk, 'Rk': Rk, 'fk': fk, 'Ak': Ak, 'Bk': Bk, 'gk': gk,
@@ -74,39 +76,29 @@ class mpcMatrices(None):
         Ck, ug, lg = self.get_inequality_constraints(borders[i-1], MPC_vars, ModelParams)
         
         # Bounds
-        lb, ub = self.get_bounds(MPC_vars, ModelParams)
+        lb = MPC_vars['bounds'][:, 0]
+        ub = MPC_vars['bounds'][:, 1]
         
         # Append to stage
         #! Appending not all values as in for-loop
         stage.append({'Qk': Qk, 'Rk': Rk, 'fk': fk, 'Ck': Ck, 'ug': ug, 'lg': lg, 'lb': lb, 'ub': ub})
         
-        """
         # Call solver interface
-        interface = MPC_vars['interface']
-        if interface == 'Yalmip':
-            X, U, dU, info = yalmip_interface(stage, MPC_vars, ModelParams)
-        elif interface == 'CVX':
-            X, U, dU, info = cvx_interface(stage, MPC_vars, ModelParams)
-        elif interface == 'hpipm':
-            X, U, dU, info = hpipm_interface(stage, MPC_vars, ModelParams)
-        elif interface == 'quadprog':
-            X, U, dU, info = quadprog_interface(stage, MPC_vars, ModelParams)
-        else:
+        try:
+            solver = Solver(stage, MPC_vars, ModelParams)
+            X, U, dU, info = solver.getResults()
+        except:
             raise ValueError("Invalid optimization interface")
         
-        
         return X, U, dU, info
-        """
 
 
     def generate_h(self, pathinfo, MPC_vars, ModelParams, Xk, i):
-        """
-        Generates the cost matrix for the state and input.
-        """
+        """ Generates the cost matrix for the state and input. """
         
         Qtilde = self.generate_qtilde(pathinfo, MPC_vars, ModelParams, Xk, i)
         
-        if i == MPC_vars['N'] + 1:
+        if (i == (MPC_vars['N'] + 1)):
             Qtilde[ModelParams['stateindex_omega'], ModelParams['stateindex_omega']] = MPC_vars['qOmegaNmult'] * MPC_vars['qOmega']
         else:
             Qtilde[ModelParams['stateindex_omega'], ModelParams['stateindex_omega']] = MPC_vars['qOmega']
@@ -124,11 +116,9 @@ class mpcMatrices(None):
 
 
     def generate_qtilde(self, pathinfo, MPC_vars, ModelParams, Xk, i):
-        """
-        Computes the quadratic term for the cost function.
-        """
+        """ Computes the quadratic term for the cost function. """
         
-        if i == MPC_vars['N'] + 1:
+        if (i == (MPC_vars['N'] + 1)):
             Q = np.diag([MPC_vars['qCNmult'] * MPC_vars['qC'], MPC_vars['qL']])
         else:
             Q = np.diag([MPC_vars['qC'], MPC_vars['qL']])
@@ -138,13 +128,12 @@ class mpcMatrices(None):
         
         errorgrad = np.concatenate([grad_eC, grad_eL])
         Qtilde = errorgrad.T @ Q @ errorgrad
+
         return Qtilde
 
 
     def generate_f(self, pathinfo, MPC_vars, ModelParams, Xk, i):
-        """
-        Generates the linear cost term.
-        """
+        """ Generates the linear cost term. """
         
         #! physical => where we currently are | virtual => calculated / forecast
         x_phys = Xk[0]
@@ -158,22 +147,21 @@ class mpcMatrices(None):
         
         grad_e = np.concatenate([grad_eC, grad_eL])
         
-        if i == MPC_vars['N'] + 1:
+        if (i == (MPC_vars['N'] + 1)):
             Q = np.diag([MPC_vars['qCNmult'] * MPC_vars['qC'], MPC_vars['qL']])
         else:
             Q = np.diag([MPC_vars['qC'], MPC_vars['qL']])
         
         fx = 2 * e.T @ Q @ grad_e - 2 * Xk.T @ grad_e.T @ Q @ grad_e
         fT = np.concatenate([fx, np.zeros(ModelParams['nu'] - 1), -MPC_vars['qVtheta']])
-        
         f = np.dot(np.dot(np.linalg.inv(MPC_vars['Tx']), fT), np.linalg.inv(MPC_vars['Tu']))
+
         return f
 
 
     def get_equality_constraints(self, Xk, Uk, MPC_vars, ModelParams):
-        """
-        Computes the equality constraints.
-        """
+        """ Computes the equality constraints. """
+
         nx = ModelParams['nx']
         nu = ModelParams['nu']
         
@@ -191,9 +179,8 @@ class mpcMatrices(None):
 
 
     def get_inequality_constraints(border, MPC_vars, ModelParams):
-        """
-        Computes the inequality constraints.
-        """
+        """ Computes the inequality constraints. """
+
         nx = ModelParams['nx']
         nu = ModelParams['nu']
         
@@ -214,13 +201,3 @@ class mpcMatrices(None):
         Ck = np.dot(Ck, np.block([[MPC_vars['invTx'], np.zeros((nx, nu))], [np.zeros((nu, nx)), MPC_vars['invTu']]]))
         
         return Ck, ug, lg
-
-
-    def get_bounds(MPC_vars, ModelParams):
-        """
-        Returns the bounds for the optimization problem.
-        """
-        lb = MPC_vars['bounds'][:, 0]
-        ub = MPC_vars['bounds'][:, 1]
-        
-        return lb, ub
