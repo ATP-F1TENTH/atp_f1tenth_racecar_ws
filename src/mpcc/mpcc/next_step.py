@@ -1,15 +1,19 @@
+
 import numpy as np
+from SimTimeStep import SimTimeStep
+
 
 class next_step(None):
-    """
-    This function updates and augments state and control trajectories for the next iteration
-    of an MPC optimization, ensuring continuity for angular states and simulating the next state based on the current inputs.
-    """
 
     def __init__(self) -> None:
         pass
 
     def aug_state(x, u, x0, MPC_vars, ModelParams, tl):
+        """
+        This function updates and augments state and control trajectories for the next iteration
+        of an MPC optimization, ensuring continuity for angular states and simulating the next state
+        based on the current inputs.
+        """
 
         nx = ModelParams['nx']
         nu = ModelParams['nu']
@@ -33,7 +37,8 @@ class next_step(None):
         uTemp[:, j] = u[:, j]
 
         j = N+1
-        xTemp[:, j] = SimTimeStep(x[:, N+1], u[:, N], Ts, ModelParams)
+        simTimeStep = SimTimeStep()
+        xTemp[:, j] = simTimeStep.sim_time_step(x[:, N+1], u[:, N], Ts, ModelParams)
 
         if xTemp[index_phi, 0] - xTemp[index_phi, 1] > np.pi:
             xTemp[index_phi, 1:] += 2 * np.pi
