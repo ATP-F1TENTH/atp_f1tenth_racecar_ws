@@ -159,15 +159,26 @@ class PurePursuit(Node):
         self.cross_track_error = None
 
     def load_race_line(self, file_path):
-        race_line = []
+        """ Function to load trajectory from csv file. """
+
+        delimiter = '\t'    # ','
+        raceline = []
+
         with open(file_path, 'r') as file:
-            reader = csv.reader(file)
+            reader = csv.reader(file, delimiter=delimiter)
+
             for row in reader:
-                x = float(row[0])
-                y = float(row[1])
-                v = float(row[2])
-                race_line.append((x, y, v))
-        return race_line
+                try:
+                    x = float(row[0])
+                    y = float(row[1])
+                    v = float(row[2])
+                    raceline.append((x, y, v))
+
+                except ValueError as e:
+                    self.get_logger().info(f"Skipped header row: {row}")
+                    continue
+
+        return raceline
     
     def _get_pointarray(self, points):
         pt_arr = []
