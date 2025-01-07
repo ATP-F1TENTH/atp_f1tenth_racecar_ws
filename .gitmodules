@@ -36,6 +36,7 @@
 [submodule "src/camera_ros"]
 	path = src/camera_ros
 	url = https://github.com/PAW-F1TENTH/camera_ros.git
+	branch = main
 [submodule "src/f1tenth_mpcc"]
 	path = src/f1tenth_mpcc
 	url = https://github.com/ATP-F1TENTH/f1tenth_mpcc.git
