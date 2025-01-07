@@ -40,6 +40,3 @@
 [submodule "src/f1tenth_mpcc"]
 	path = src/f1tenth_mpcc
 	url = https://github.com/ATP-F1TENTH/f1tenth_mpcc.git
-[submodule "libcamera"]
-	path = libcamera
-	url = https://git.libcamera.org/libcamera/libcamera.git
