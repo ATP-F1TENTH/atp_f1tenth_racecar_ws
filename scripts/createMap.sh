@@ -1,45 +1,74 @@
 #!/bin/bash
 
-# Need to positively identify the session name:
+# Default arguments
+build_flag=false
+hold_flag=false
+open_flag=false
+sim_flag=false
+loc_flag=false
+loc_config="mapping_localization/mapper_params_online_async.yaml"   # default vehicle mapping config
+path="/home/itse/atp_f1tenth_racecar_ws"
+
+# Default sim mapping config
+sim_cfg="mapping_localization/mapper_params_simulation_async.yaml"
+
+# Get arguments
+while getopts 'obhsp:l:' flag; do
+  case "${flag}" in
+    b) build_flag=true ;;
+    h) hold_flag=true ;;
+    o) open_flag=true ;;
+    s) sim_flag=true ;;
+    l) loc_config="${OPTARG}" ; loc_flag=true ;;
+    p) path="${OPTARG}" ;;
+  esac
+done
+
+# Name session
 SESSION=createMap
-echo "TO ATTACH TO SESSION: screen -r ${SESSION}"
-
-CMD1="ros2 launch vehicle_control vehicle_control_launch.py ; exec bash";
-CAR=true
-if [[ $3 == '--simulation' ]] || [[ $3 == '-S' ]]; then 
-    CMD1="ros2 launch vehicle_control vehicle_control_simulation_launch.py"
-    CAR=false;
-else
-    echo "No valid parameter: ${3}. Starting real car launch...";
+if [[ $open_flag == false ]]; then
+    echo "TO ATTACH TO SESSION: screen -r ${SESSION}";
 fi
 
-# Setup ROS2 environment
-cd /home/itse/atp_f1tenth_racecar_ws
-if [[ $2 == '--build' ]] || [[ $2 == '-B' ]]; then
+# Hold window after execution
+HOLD=''
+if [[ $hold_flag == true ]]; then
+    HOLD="exec bash" ;
+fi
+
+# Navigate to ROS2 workspace
+cd $path
+
+# Build workspace if required
+if [[ $build_flag == true ]]; then
     colcon build;
-else
-    echo "No valid parameter: ${2}. Build process deactivated.";
 fi
+
+# Source workspace
 source /opt/ros/iron/setup.bash
 source install/setup.bash
 
-# Create detached session for rviz2
-screen \
-    -d -m \
-    -S ${SESSION} \
-    bash -c "${CMD1}"
+# Create detached session for launching vehicle control
+CMD1="ros2 launch vehicle_control vehicle_control_launch.py"
+if [[ $sim_flag == true ]]; then
+    CMD1="ros2 launch vehicle_control vehicle_control_simulation_launch.py" ;
+fi
+screen -dmS ${SESSION} bash -c "${CMD1} ; ${HOLD}"
 
-# Now start vehicle control in a new window, by sending a remote command:
-if [[ $CAR == true ]]; then
-    screen -S $SESSION -X screen bash -c "ros2 run rviz2 rviz2";
+# Start rviz2 in a new window, by sending a remote command
+if [[ $sim_flag == false ]]; then
+    screen -S $SESSION -X screen bash -c "ros2 run rviz2 rviz2 ; ${HOLD}";
 fi
 
-# Now start slam toolbox in a new window, by sending a remote command:
-CMD2="ros2 launch slam_toolbox online_async_launch.py slam_params_file:=mapping_localization/mapper_params_simulation_async.yaml"
-screen -S $SESSION -X screen bash -c "${CMD2}"
+# Start slam toolbox in a new window, by sending a remote command
+LINK=$loc_config
+if [[ $sim_flag == true ]] && [[ $loc_flag == false ]]; then
+    LINK=$sim_cfg
+fi
+CMD2="ros2 launch slam_toolbox online_async_launch.py slam_params_file:=${LINK}"
+screen -S $SESSION -X screen bash -c "${CMD2} ; ${HOLD}"
 
-if [[ $1 == '--open' ]] || [[ $1 == '-O' ]]; then 
+# Connect to detached screen session
+if [[ $open_flag == true ]]; then 
     screen -r $SESSION;
-else
-    echo "No valid parameter: ${1}. Session detached.";
 fi
