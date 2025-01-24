@@ -57,18 +57,12 @@ After that, use `colcon build` to build your changes. You may now proceed to Cre
 ## Create a Map using slam_toolbox
 Start Slam Toolbox in the simulation with command:
 ```
-ros2 launch slam_toolbox online_async_launch.py
-```
-```
-slam_params_file:=mapping_localization/mapper_params_simulation_async.yaml
+ros2 launch slam_toolbox online_async_launch.py slam_params_file:=mapping_localization/mapper_params_simulation_async.yaml
 ```
 
 Start Slam Toolbox on the actual vehicle with command:
 ```
-ros2 launch slam_toolbox online_async_launch.py
-```
-```
-slam_params_file:=mapping_localization/mapper_params_online_async.yaml
+ros2 launch slam_toolbox online_async_launch.py slam_params_file:=mapping_localization/mapper_params_online_async.yaml
 ```
 
 Open rviz and add the SlamToobox Panel (Panels --> Add new panels). You can find a "save to file" button there.

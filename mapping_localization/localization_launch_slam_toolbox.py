@@ -33,7 +33,7 @@ def generate_launch_description():
                         PythonLaunchDescriptionSource([
                             FindPackageShare("slam_toolbox"), '/launch', '/online_async_launch.py']),
                         launch_arguments={
-                                            "slam_params_file" : "/root/wette_racecar_ws/mapping_localization/localization_params_online_async.yaml"
+                                            "slam_params_file" : "/home/itse/atp_f1tenth_racecar_ws/mapping_localization/localization_params_online_async.yaml"
                                         }.items()
                         )
 
